@@ -1,0 +1,156 @@
+
+
+// "product_name","category_name","main_parameter","deep_parameter","parameter_value","rating"
+// MSI gf 63 thin,Ноутбуки,Процессор,Общее количество ядер процессора,6,60
+// MSI gf 63 thin,Ноутбуки,Оперативная память,Объем оперативной памяти,16,160
+// MSI gf 63 thin,Ноутбуки,Экран,Разрешение экрана,1920 × 1080,40
+// ASUS Vivobook 17X K3704VA-AU066,Ноутбуки,Экран,Разрешение экрана,1920 × 1080,40
+// ASUS Vivobook 17X K3704VA-AU066,Ноутбуки,Процессор,Общее количество ядер процессора,4,40
+// ASUS Vivobook 17X K3704VA-AU066,Ноутбуки,Экран,Диагональ экрана (дюйм),15,
+// MSI gf 63 thin,Ноутбуки,Экран,Диагональ экрана (дюйм),15,
+// ASUS Vivobook 17X K3704VA-AU066,Ноутбуки,Оперативная память,Объем оперативной памяти,8,80
+
+// в дашборде присктствует преднастроенная переменная $product_name = SELECT DISTINCT product_name FROM product_info;
+
+// 
+// Вы можете использовать .map()и .find()Функции JavaScript.
+// The refId запрос извлекает данные из источника данных. По умолчанию присвоенные 
+// имена выглядят так A, B, и так далее. Приведенный выше код работает с тремя запросами logo, connections, и nodes.
+// name  имя столбца фрейма данных. Код выше ссылается на body, source, target, title, и description столбцы.
+// Для работы с Grafana 10 и ее более старыми версиями необходимо использовать valuesи values.bufferполя.
+
+// Прир того как данные получены из postgresql, преобразуются в переменные, которые будут использоваться в графике
+// const series = data.series.map((s) => {
+//     const rates =
+//       s.fields.find((f) => f.name === "Rate").values.buffer ||
+//       s.fields.find((f) => f.name === "Rate").values;
+//     const calls =
+//       s.fields.find((f) => f.name === "Calls").values.buffer ||
+//       s.fields.find((f) => f.name === "Calls").values;
+//     const names =
+//       s.fields.find((f) => f.name === "Name").values.buffer ||
+//       s.fields.find((f) => f.name === "Name").values;
+  
+//     return rates.map((d, i) => [d, calls[i], names[i]]);
+//   })[0];
+
+// data.series.map((s) => { // перебираем массив данных
+//   if (s.refId === "product_info") { // если refId равен product_info
+//     product_name = // создаем переменную product_name
+//       s.fields.find((f) => f.name === "product_name").values.buffer ||        // ищем в массиве fields значение с именем product_name
+//       s.fields.find((f) => f.name === "product_name").values;                 // и присваиваем его переменной product_name
+//   } else if (s.refId === "main_parameters_maxratings") {                      // если refId равен main_parameters_maxratings
+//     category_name =                                                           // создаем переменную category_name
+//       s.fields.find((f) => f.name === "main_parameter").values.buffer ||      // ищем в массиве fields значение с именем main_parameter
+//       s.fields.find((f) => f.name === "main_parameter").values;               // и присваиваем его переменной category_name
+//     rating =                                                                  // создаем переменную rating
+//       s.fields.find((f) => f.name === "total_max_rating").values.buffer ||    // ищем в массиве fields значение с именем total_max_rating
+//       s.fields.find((f) => f.name === "total_max_rating").values;             // и присваиваем его переменной rating
+//   }                                                                           // закрываем условие if
+// });                                                                           // закрываем перебор массива данных   
+
+// Запрос к базе данных для получения данных по выбранным продуктам
+// const productData = await datasourceSrv.getMetricSources({ metricName: 'product_info' });
+
+// // Получение данных
+// const product_name = productData[0].fields.find(f => f.name === 'product_name').values.buffer;
+// const main_parameter = productData[0].fields.find(f => f.name === 'main_parameter').values.buffer;
+// const deep_parameter = productData[0].fields.find(f => f.name === 'deep_parameter').values.buffer;
+// const rating = productData[0].fields.find(f => f.name === 'rating').values.buffer;
+
+// data.series.map((s) => { // перебираем массив данных
+//   if (s.refId === "product_info") { // если refId равен product_info
+//     product_name = // создаем переменную product_name
+//       s.fields.find((f) => f.name === "product_name").values.buffer ||        
+//       s.fields.find((f) => f.name === "product_name").values;                 
+//     main_parameter =
+//       s.fields.find((f) => f.name === "main_parameter").values.buffer ||
+//       s.fields.find((f) => f.name === "main_parameter").values;
+//     deep_parameter =
+//       s.fields.find((f) => f.name === "deep_parameter").values.buffer ||
+//       s.fields.find((f) => f.name === "deep_parameter").values;
+//     rating =
+//       s.fields.find((f) => f.name === "rating").values.buffer ||
+//       s.fields.find((f) => f.name === "rating").values;       
+//     } else if (s.refId === "main_parameters_maxratings") {                      
+//     category_name =                                                          
+//       s.fields.find((f) => f.name === "main_parameter").values.buffer ||      
+//       s.fields.find((f) => f.name === "main_parameter").values;               
+//     total_max_rating =                                                                 
+//       s.fields.find((f) => f.name === "total_max_rating").values.buffer ||    
+//       s.fields.find((f) => f.name === "total_max_rating").values;             
+//   }                                                                           
+// });                                                                            
+
+
+// const productNames = data.series.map((s) => {
+//   if (s.refId === "product_info") {
+//     product_name = // создаем переменную product_name
+//       s.fields.find((f) => f.name === "product_name").values.buffer ||        
+//       s.fields.find((f) => f.name === "product_name").values;                 
+//     main_parameter =
+//       s.fields.find((f) => f.name === "main_parameter").values.buffer ||
+//       s.fields.find((f) => f.name === "main_parameter").values;
+//     deep_parameter =
+//       s.fields.find((f) => f.name === "deep_parameter").values.buffer ||
+//       s.fields.find((f) => f.name === "deep_parameter").values;
+//     rating =
+//       s.fields.find((f) => f.name === "rating").values.buffer ||
+//       s.fields.find((f) => f.name === "rating").values;   
+//   }
+// });
+
+const uniquenames = data.series.map((s) => {
+  if (s.refId === "unique_names") {
+    unique_product_name =
+      s.fields.find((f) => f.name === "product_name").values.buffer ||
+      s.fields.find((f) => f.name === "product_name").values;
+  }
+});
+
+
+const indicators = data.series.map((s) => {
+  if (s.refId === "main_parameters_maxratings") {
+    category_name =
+      s.fields.find((f) => f.name === "main_parameter").values.buffer ||
+      s.fields.find((f) => f.name === "main_parameter").values;
+    total_max_rating =
+      s.fields.find((f) => f.name === "total_max_rating").values.buffer ||
+      s.fields.find((f) => f.name === "total_max_rating").values;
+  }
+});
+
+
+
+const ratings = data.series.map((s) => {
+  if (s.refId === "product_rating") {
+  product_name =
+    s.fields.find((f) => f.name === "product_name").values.buffer ||
+    s.fields.find((f) => f.name === "product_name").values;
+  main_parameter =
+    s.fields.find((f) => f.name === "main_parameter").values.buffer ||
+    s.fields.find((f) => f.name === "main_parameter").values;
+  total_rating =
+    s.fields.find((f) => f.name === "total_rating").values.buffer ||
+    s.fields.find((f) => f.name === "total_rating").values;
+  }
+});
+
+// Создаем структуру данных для радарной диаграммы
+const radarData = {
+  legend: {
+     data: uniquenames
+  },
+  radar: {
+    indicators: indicators.map(i => ({name: i.main_parameter, max: i.total_max_rating})),
+  },
+  series: [{
+    type: 'radar',
+    data: ratings.map(r => ({
+      name: r.product_name,
+      value: r.total_rating
+    }))
+  }]
+}
+
+return radarData;
